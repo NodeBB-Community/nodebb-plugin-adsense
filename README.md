@@ -3,7 +3,7 @@ NodeBB Google Adsense plugin is made to easily place ads on your forum in differ
 
 ## Installation
 
-npm install nodebb-plugin-google-adsense
+npm install nodebb-plugin-adsense
 
 ## Using custom template?
 The plugin is made for a default NodeBB theme Persona. If you have a custom theme and want to display ads, make sure you have these classes in your page:
