@@ -2,6 +2,7 @@ var loaded = false;
 var relativePath = config.relative_path;
 
 $(window).on('action:ajaxify.start', function(e, url) {
+	$.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", function (data){
             $.getJSON(relativePath + "/google-adsense.config", function (data){
 
                     //If ad in header is enabled
@@ -71,7 +72,7 @@ $(window).on('action:ajaxify.start', function(e, url) {
 			}
                     })
             })
-
+      })
 
 
         function getInsCode(clientId, dataId, customClass, style, format) {
