@@ -6,13 +6,13 @@ $(window).on('action:ajaxify.end', function (e, url) {
 		$.getJSON(relativePath + "/google-adsense.config", function (data){
 			//If ad in header is enabled
 			if(data.header_id && loaded == false){
-				$(getInsCode(data.client_id, data.header_id, '', 'margin:15px auto;', 'auto')).insertBefore("#content");
+				$("<div class='text-center'>" + getInsCode(data.client_id, data.header_id, '', 'margin:15px auto;', 'auto') + "</div>").insertBefore("#content");
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}
 
 			//If ad in footer is enabled
 			if(data.footer_id && loaded == false){
-				$(getInsCode(data.client_id, data.footer_id, '', 'margin:15px auto;', 'auto')).insertAfter("#content");
+				 $("<div class='text-center'>" + getInsCode(data.client_id, data.footer_id, '', 'margin:15px auto;', 'auto') + "</div>").insertAfter("#content");
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}
 
