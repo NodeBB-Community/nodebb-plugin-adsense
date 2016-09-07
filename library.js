@@ -56,9 +56,7 @@ admin.activate = function(id) {
 			{ field: 'first_post_id', value: '' }
 		];
 
-		async.each(defaults, function(optObj, next) {
-			meta.settings.setOnEmpty('google-adsense', optObj.field, optObj.value, next);
-		});
+		meta.settings.setOnEmpty('google-adsense', defaults, next);
 	}
 };
 
