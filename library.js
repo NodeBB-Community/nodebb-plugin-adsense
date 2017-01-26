@@ -45,8 +45,8 @@ admin.onLoad = function(params, callback) {
 	callback();
 };
 
-admin.activate = function(id) {
-	if (id === 'nodebb-plugin-adsense') {
+admin.activate = function(data) {
+	if (data.id === 'nodebb-plugin-adsense') {
 		var defaults = [
 			{ field: 'client_id', value: '' },
 			{ field: 'header_id', value: '' },
