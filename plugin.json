@@ -8,7 +8,8 @@
 	"hooks": [
 		{ "hook": "filter:admin.header.build", "method": "admin.menu"},
 		{ "hook": "static:app.load", "method": "admin.onLoad" },
-		{ "hook": "action:plugin.activate", "method": "admin.activate" }
+		{ "hook": "action:plugin.activate", "method": "admin.activate" },
+		{ "hook": "filter:config.get", "method": "onConfigGet" }
 	],
 	"scripts": [
 		"public/main.js"
