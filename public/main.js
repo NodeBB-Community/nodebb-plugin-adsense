@@ -1,77 +1,69 @@
+/* globals config, $ */
+'use strict';
+
 var loaded = false;
-var relativePath=config.relative_path;
 
 $(window).on('action:ajaxify.end', function (e, url) {
-	$.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", function (data){
-		$.getJSON(relativePath + "/google-adsense.config", function (data){
-			//If ad in header is enabled
-			if(data.header_id && loaded == false){
-				$("<div class='text-center'>" + getInsCode(data.client_id, data.header_id, '', 'margin:15px auto;', 'auto') + "</div>").insertBefore("#content");
+	function getInsCode(clientId, dataId, customClass, style, format){
+		var ad = '<div class="adsensewrapper" style="text-align:center;"><ins class="adsbygoogle ' + customClass + '" style="display:block; margin-bottom:15px;' + style + ' " data-ad-format="' + format + '" data-ad-client="ca-' + clientId + '" data-ad-slot="' + dataId + '"></ins></div>';
+		return ad;
+	}
+
+	function placeSideAd(pull, margin) {
+		var height = $(".posts >li:first-child .content").height();
+		var width = 300;
+		var type = "vertical";
+		if (height < 250){
+			type = "rectangle";
+			width = 250;
+		}
+
+		$(".posts >li:first-child .content").prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, 'pull-' + pull, 'width:' + width + 'px;  margin-' + margin + ':30px;', type));
+	}
+
+	$.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", function () {
+
+		//If ad in header is enabled
+		if (config.googleAdsense.header_id && !loaded) {
+			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.header_id, '', 'margin:15px auto;', 'auto')).insertBefore("#content");
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		}
+
+		//If ad in footer is enabled
+		if (config.googleAdsense.footer_id && !loaded) {
+			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.footer_id, '', 'margin:15px auto;', 'auto')).insertAfter("#content");
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		}
+
+		if (ajaxify.data.template.topic) {
+			if (config.googleAdsense.after_first_post_id) {
+				$(".posts >li:first-child").after("<li style='height:100px;'>" + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + "</li>");
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}
+			if (config.googleAdsense.first_post_id) {
+				switch (config.googleAdsense.first_post_position) {
+					case 'bottom':
+					$(".posts >li:first-child .content").append(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+					break;
 
-			//If ad in footer is enabled
-			if(data.footer_id && loaded == false){
-				 $("<div class='text-center'>" + getInsCode(data.client_id, data.footer_id, '', 'margin:15px auto;', 'auto') + "</div>").insertAfter("#content");
+					case 'top':
+					$(".posts >li:first-child .content").prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+					break;
+
+					case 'left':
+					placeSideAd('left', 'right');
+					break;
+
+					case 'right':
+					placeSideAd('right', 'left');
+					break;
+
+					default:
+					break;
+				}
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}
-
-			if (url.url.substring(0, 6) == "topic/") {
-				if(data.after_first_post_id){
-					$(".posts >li:first-child").after("<li>" + getInsCode(data.client_id, data.after_first_post_id, '', 'margin: 15px auto', 'auto') + "</li>");
-					(adsbygoogle = window.adsbygoogle || []).push({});
-				}
-				if(data.first_post_id){
-					switch(data.first_post_position){
-						case 'bottom':
-						$(".posts >li:first-child .content").append(getInsCode(data.client_id, data.first_post_id, '', 'margin:15px auto;', 'auto'));
-						break;
-
-						case 'top':
-						$(".posts >li:first-child .content").prepend(getInsCode(data.client_id, data.first_post_id, '', 'margin:15px auto;', 'auto'));
-						break;
-
-						case 'left':
-						var height = $(".posts >li:first-child .content").height();
-						if(height < 250){
-							var type = "rectangle";
-							var width = 250;
-						}
-						else{
-							var width = 300;
-							var type ="vertical";
-						}
-						$(".posts >li:first-child .content").prepend(getInsCode(data.client_id, data.first_post_id, 'pull-left', 'width:' + width + 'px;  margin-right:30px;', type));
-						break;
-
-						case 'right':
-						var height = $(".posts >li:first-child .content").height();
-						if(height < 250){
-							var type = "rectangle";
-							var width = 250;
-						}
-						else{
-							var width = 300;
-							var type ="vertical";
-						}
-						$(".posts >li:first-child .content").prepend(getInsCode(data.client_id, data.first_post_id, 'pull-right', 'width:' + width + 'px; margin-left:30px;', type));
-						break;
-
-						default:
-						break;
-					}
-					(adsbygoogle = window.adsbygoogle || []).push({});
-
-				}
-			}
-			loaded = true;
-		})
-})
-
-})
-
-
-function getInsCode(clientId, dataId, customClass, style, format){
-	var ad = '<ins class="adsbygoogle ' + customClass + '" style="display:block; margin-bottom:15px;' + style + ' " data-ad-format="' + format + '" data-ad-client="ca-' + clientId + '" data-ad-slot="' + dataId + '"></ins>';
-	return ad;
-}
+		}
+		loaded = true;
+	});
+});

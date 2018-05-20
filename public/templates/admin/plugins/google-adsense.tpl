@@ -4,7 +4,7 @@
 		<div class="col-sm-12 col-md-8">
 			<h1>Google Adsense</h1>
 			<p>
-				Detailed readme can be found on <a href="https://github.com/dovydaskukalis/nodebb-plugin-google-adsense" target="_blank">GitHub</a>
+				Detailed readme can be found on <a href="https://github.com/NodeBB-Community/nodebb-plugin-adsense" target="_blank">GitHub</a>
 			</p>
 			<div class="form-group">
 				<label for="client_id">Publisher ID (<a href="https://support.google.com/adsense/answer/105516?hl=en" target="_blank" title="More information">?</a>)</label>
@@ -68,7 +68,12 @@ require(['settings'], function(Settings) {
 
 	$('#save').on('click', function() {
 		Settings.save('google-adsense', $('.google-adsense-settings'), function() {
-			socket.emit('admin.restart');
+			app.alert({
+				type: 'success',
+				alert_id: 'google-adsense-saved',
+				title: '',
+				message: 'Settings Saved',
+			})
 		});
 		return false;
 	});

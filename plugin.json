@@ -8,10 +8,9 @@
 	"hooks": [
 		{ "hook": "filter:admin.header.build", "method": "admin.menu"},
 		{ "hook": "static:app.load", "method": "admin.onLoad" },
-		{ "hook": "action:plugin.activate", "method": "admin.activate" },
-		{ "hook": "action:settings.set", "method": "admin.reloadSettings"}
+		{ "hook": "action:plugin.activate", "method": "admin.activate" }
 	],
 	"scripts": [
-	"public/main.js"
+		"public/main.js"
 	]
 }
