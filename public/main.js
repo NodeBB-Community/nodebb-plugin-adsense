@@ -37,7 +37,7 @@ $(window).on('action:ajaxify.end', function (e, url) {
 
 		if (ajaxify.data.template.topic) {
 			if (config.googleAdsense.after_first_post_id) {
-				$(".posts >li:first-child").after("<li style='height:100px;'>" + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + "</li>");
+				$(".posts >li:first-child").after("<li>" + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + "</li>");
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}
 			if (config.googleAdsense.first_post_id) {
