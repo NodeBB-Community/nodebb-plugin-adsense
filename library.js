@@ -1,34 +1,67 @@
 'use strict';
 
 var async = require('async');
+var validator = require('validator');
+
 var meta = module.parent.require('./meta');
-var helpers = module.parent.require('./routes')
+var groups = module.parent.require('./groups');
 
 var Adsense = module.exports;
 
 Adsense.onConfigGet = function (config, callback) {
-	meta.settings.get('google-adsense', function(err, options) {
-		if (err) {
-			return callback(err);
-		}
-		config.googleAdsense = options;
-		callback(null, config);
-	});
+	async.waterfall([
+		function (next) {
+			meta.settings.get('google-adsense', next);
+		},
+		function (options, next) {
+			config.googleAdsense = options;
+			var adFreeGroups = [];
+			try {
+				adFreeGroups = JSON.parse(options.adFreeGroups || '[]');
+			} catch (err) {
+				return next(err);
+			}
+			groups.isMemberOfGroups(config.uid, adFreeGroups, next);
+		},
+		function (isMemberOfAdFreeGroups, next) {
+			config.googleAdsense.isInAdFreeGroup = isMemberOfAdFreeGroups.includes(true);
+			next(null, config);
+		},
+	], callback);
 };
 
 Adsense.admin = {};
 Adsense.admin.menu = function (custom_header, callback) {
 	custom_header.plugins.push({
-		"route": '/plugins/google-adsense',
-		"icon": 'fa-usd',
-		"name": 'Google Adsense'
+		route: '/plugins/google-adsense',
+		icon: 'fa-usd',
+		name: 'Google Adsense',
 	});
 	callback(null, custom_header);
 };
 
 Adsense.admin.onLoad = function (params, callback) {
 	function render(req, res) {
-		res.render('admin/plugins/google-adsense', {});
+		async.waterfall([
+			function (next) {
+				groups.getGroups('groups:createtime', 0, -1, next);
+			},
+			function (groupNames) {
+				groupNames = groupNames.filter(function (groupName) {
+					return groupName && !groups.isPrivilegeGroup(groupName);
+				});
+
+				var list = groupNames.map(function (groupName) {
+					return {
+						name: validator.escape(String(groupName)),
+						value: validator.escape(String(groupName)),
+					};
+				});
+				res.render('admin/plugins/google-adsense', {
+					groups: list,
+				});
+			},
+		], callback);
 	}
 
 	params.router.get('/admin/plugins/google-adsense', params.middleware.admin.buildHeader, render);
@@ -43,12 +76,12 @@ Adsense.admin.activate = function (data) {
 			{ field: 'client_id', value: '' },
 			{ field: 'header_id', value: '' },
 			{ field: 'footer_id', value: '' },
-			{ field: 'after_first_post_id', value: ''},
+			{ field: 'after_first_post_id', value: '' },
 			{ field: 'first_post_position', value: 'bottom' },
-			{ field: 'first_post_id', value: '' }
+			{ field: 'first_post_id', value: '' },
 		];
 
-		async.each(defaults, function(optObj, next) {
+		async.each(defaults, function (optObj, next) {
 			meta.settings.setOnEmpty('google-adsense', optObj.field, optObj.value, next);
 		});
 	}

@@ -57,6 +57,19 @@
 			<input type="text" class="form-control" name="after_first_post_id" id="after_first_post_id" placeholder="xxxxxxxxxx">
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-sm-2 col-xs-12 settings-header">Disable Ads For Groups</div>
+		<div class="col-sm-10 col-xs-12">
+			<div class="form-group">
+				<label for="adFreeGroups">Select the groups that will not see ads</label>
+				<select class="form-control" id="adFreeGroups" name="adFreeGroups" multiple>
+					<!-- BEGIN groups -->
+					<option value="{../name}">{../value}</option>
+					<!-- END groups -->
+				</select>
+			</div>
+		</div>
+	</div>
 </div>
 <button type="submit" class="btn btn-primary" id="save">Submit</button>
 <p></p>
