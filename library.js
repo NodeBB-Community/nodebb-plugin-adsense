@@ -3,8 +3,8 @@
 var async = require('async');
 var validator = require('validator');
 
-var meta = module.parent.require('./meta');
-var groups = module.parent.require('./groups');
+var meta = require.main.require('./src/meta');
+var groups = require.main.require('./src/groups');
 
 var Adsense = module.exports;
 
