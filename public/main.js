@@ -21,6 +21,11 @@ $(window).on('action:ajaxify.end', function () {
 
 		$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, 'pull-' + pull, 'width:' + width + 'px;  margin-' + margin + ':30px;', type));
 	}
+
+	if (ajaxify.data.template.login || ajaxify.data.template.register) {
+		return;
+	}
+
 	if (config.googleAdsense.isInAdFreeGroup) {
 		return;
 	}
