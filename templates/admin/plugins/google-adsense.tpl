@@ -1,4 +1,3 @@
-
 <form role="form" class="google-adsense-settings form-horizontal">
 	<div class="row">
 		<div class="col-sm-12 col-md-8">

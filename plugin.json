@@ -3,7 +3,7 @@
 	"description": "Plugin to easily place ads on your forum in different areas",
 	"url": "https://github.com/NodeBB-Community/nodebb-plugin-adsense",
 	"library": "./library.js",
-	"templates": "./public/templates",
+	"templates": "./templates",
 	"hooks": [
 		{ "hook": "filter:admin.header.build", "method": "admin.menu"},
 		{ "hook": "static:app.load", "method": "admin.onLoad" },
