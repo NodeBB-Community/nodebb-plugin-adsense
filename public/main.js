@@ -1,5 +1,3 @@
-/* globals window, config, ajaxify, $ */
-
 'use strict';
 
 var loaded = false;
@@ -33,42 +31,42 @@ $(window).on('action:ajaxify.end', function () {
 		// If ad in header is enabled
 		if (config.googleAdsense.header_id && !loaded) {
 			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.header_id, '', 'margin:15px auto;', 'auto')).insertBefore('#content');
-			(adsbygoogle = window.adsbygoogle || []).push({});
+			(window.adsbygoogle = window.adsbygoogle || []).push({});
 		}
 
 		// If ad in footer is enabled
 		if (config.googleAdsense.footer_id && !loaded) {
 			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.footer_id, '', 'margin:15px auto;', 'auto')).insertAfter('#content');
-			(adsbygoogle = window.adsbygoogle || []).push({});
+			(window.adsbygoogle = window.adsbygoogle || []).push({});
 		}
 
 		if (ajaxify.data.template.topic) {
 			if (config.googleAdsense.after_first_post_id) {
 				$('.posts >li:first-child').after('<li>' + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + '</li>');
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				(window.adsbygoogle = window.adsbygoogle || []).push({});
 			}
 			if (config.googleAdsense.first_post_id) {
 				switch (config.googleAdsense.first_post_position) {
-				case 'bottom':
-					$('.posts >li:first-child .content').append(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
-					break;
+					case 'bottom':
+						$('.posts >li:first-child .content').append(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+						break;
 
-				case 'top':
-					$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
-					break;
+					case 'top':
+						$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+						break;
 
-				case 'left':
-					placeSideAd('left', 'right');
-					break;
+					case 'left':
+						placeSideAd('left', 'right');
+						break;
 
-				case 'right':
-					placeSideAd('right', 'left');
-					break;
+					case 'right':
+						placeSideAd('right', 'left');
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				(window.adsbygoogle = window.adsbygoogle || []).push({});
 			}
 		}
 		loaded = true;
