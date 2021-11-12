@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "async": "2.6.0",
-    "validator": "10.3.0"
+    "validator": "^13.7.0"
   },
   "readmeFilename": "README.md",
   "gitHead": "29458fd32c922debda109277839d23ae5c9f7e4b",
