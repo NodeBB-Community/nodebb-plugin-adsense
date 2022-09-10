@@ -1,74 +1,77 @@
 'use strict';
 
-$(window).on('action:ajaxify.end', function () {
+(function () {
 	var loaded = false;
-	function getInsCode(clientId, dataId, customClass, style, format) {
-		var ad = '<div class="adsensewrapper" style="text-align:center;"><ins class="adsbygoogle ' + customClass + '" style="display:block; margin-bottom:15px;' + style + ' " data-ad-format="' + format + '" data-ad-client="ca-' + clientId + '" data-ad-slot="' + dataId + '"></ins></div>';
-		return ad;
-	}
-
-	function placeSideAd(pull, margin) {
-		var height = $('.posts >li:first-child .content').height();
-		var width = 300;
-		var type = 'vertical';
-		if (height < 250) {
-			type = 'rectangle';
-			width = 250;
+	$(window).on('action:ajaxify.end', function () {
+		function getInsCode(clientId, dataId, customClass, style, format) {
+			var ad = '<div class="adsensewrapper" style="text-align:center;"><ins class="adsbygoogle ' + customClass + '" style="display:block; margin-bottom:15px;' + style + ' " data-ad-format="' + format + '" data-ad-client="ca-' + clientId + '" data-ad-slot="' + dataId + '"></ins></div>';
+			return ad;
 		}
 
-		$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, 'pull-' + pull, 'width:' + width + 'px;  margin-' + margin + ':30px;', type));
-	}
+		function placeSideAd(pull, margin) {
+			var height = $('.posts >li:first-child .content').height();
+			var width = 300;
+			var type = 'vertical';
+			if (height < 250) {
+				type = 'rectangle';
+				width = 250;
+			}
 
-	if (ajaxify.data.template.login || ajaxify.data.template.register) {
-		return;
-	}
-
-	if (config.googleAdsense.isInAdFreeGroup) {
-		return;
-	}
-	$.getScript('//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', function () {
-		const addsbygoogle = window.adsbygoogle || [];
-		// If ad in header is enabled
-		if (config.googleAdsense.header_id && !loaded) {
-			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.header_id, '', 'margin:15px auto;', 'auto')).insertBefore('#content');
-			addsbygoogle.push({});
+			$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, 'pull-' + pull, 'width:' + width + 'px;  margin-' + margin + ':30px;', type));
 		}
 
-		// If ad in footer is enabled
-		if (config.googleAdsense.footer_id && !loaded) {
-			$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.footer_id, '', 'margin:15px auto;', 'auto')).insertAfter('#content');
-			addsbygoogle.push({});
+		if (ajaxify.data.template.login || ajaxify.data.template.register) {
+			return;
 		}
 
-		if (ajaxify.data.template.topic) {
-			if (config.googleAdsense.after_first_post_id) {
-				$('.posts >li:first-child').after('<li>' + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + '</li>');
+		if (config.googleAdsense.isInAdFreeGroup) {
+			return;
+		}
+		$.getScript('//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', function () {
+			const addsbygoogle = window.adsbygoogle || [];
+			// If ad in header is enabled
+			if (config.googleAdsense.header_id && !loaded) {
+				$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.header_id, '', 'margin:15px auto;', 'auto')).insertBefore('#content');
 				addsbygoogle.push({});
 			}
-			if (config.googleAdsense.first_post_id) {
-				switch (config.googleAdsense.first_post_position) {
-					case 'bottom':
-						$('.posts >li:first-child .content').append(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
-						break;
 
-					case 'top':
-						$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
-						break;
+			// If ad in footer is enabled
+			if (config.googleAdsense.footer_id && !loaded) {
+				$(getInsCode(config.googleAdsense.client_id, config.googleAdsense.footer_id, '', 'margin:15px auto;', 'auto')).insertAfter('#content');
+				addsbygoogle.push({});
+			}
 
-					case 'left':
-						placeSideAd('left', 'right');
-						break;
-
-					case 'right':
-						placeSideAd('right', 'left');
-						break;
-
-					default:
-						break;
+			if (ajaxify.data.template.topic) {
+				if (config.googleAdsense.after_first_post_id) {
+					$('.posts >li:first-child').after('<li>' + getInsCode(config.googleAdsense.client_id, config.googleAdsense.after_first_post_id, '', 'margin: 15px auto', 'auto') + '</li>');
+					addsbygoogle.push({});
 				}
-				addsbygoogle.push({});
+				if (config.googleAdsense.first_post_id) {
+					switch (config.googleAdsense.first_post_position) {
+						case 'bottom':
+							$('.posts >li:first-child .content').append(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+							break;
+
+						case 'top':
+							$('.posts >li:first-child .content').prepend(getInsCode(config.googleAdsense.client_id, config.googleAdsense.first_post_id, '', 'margin:15px auto;', 'auto'));
+							break;
+
+						case 'left':
+							placeSideAd('left', 'right');
+							break;
+
+						case 'right':
+							placeSideAd('right', 'left');
+							break;
+
+						default:
+							break;
+					}
+					addsbygoogle.push({});
+				}
 			}
-		}
-		loaded = true;
+			loaded = true;
+		});
 	});
-});
+}());
+
