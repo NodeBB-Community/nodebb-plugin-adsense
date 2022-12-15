@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-adsense",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Plugin to easily place ads on your forum in different areas",
   "main": "library.js",
   "repository": {
