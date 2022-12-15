@@ -19,7 +19,7 @@
     "url": "https://github.com/NodeBB-Community/nodebb-plugin-adsense/issues"
   },
   "nbbpm": {
-    "compatibility": "^1.5.0"
+    "compatibility": "^2.0.0"
   },
   "dependencies": {
     "validator": "^13.7.0"
