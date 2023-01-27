@@ -2,33 +2,25 @@
 
 const validator = require('validator');
 
+const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
 const groups = require.main.require('./src/groups');
 
 const Adsense = module.exports;
-
-Adsense.onConfigGet = async function (config) {
-	const settings = await meta.settings.get('google-adsense');
-	config.googleAdsense = settings;
-	const adFreeGroups = JSON.parse(settings.adFreeGroups || '[]');
-	const isMemberOfAdFreeGroups = await groups.isMemberOfGroups(config.uid, adFreeGroups);
-	config.googleAdsense.isInAdFreeGroup = isMemberOfAdFreeGroups.includes(true);
-	return config;
-};
-
+Adsense.widget = {};
 Adsense.admin = {};
-Adsense.admin.menu = function (custom_header) {
-	custom_header.plugins.push({
-		route: '/plugins/google-adsense',
-		icon: 'fa-usd',
-		name: 'Google Adsense',
-	});
-	return custom_header;
-};
 
-Adsense.admin.onLoad = async function (params) {
+let app;
+
+/**
+ * Called on `static:app.load`
+ */
+Adsense.onLoad = async function (params) {
 	const helpers = require.main.require('./src/routes/helpers');
-	helpers.setupAdminPageRoute(params.router, '/admin/plugins/google-adsense', params.middleware, [], async (req, res) => {
+
+	app = params.app;
+
+	helpers.setupAdminPageRoute(params.router, '/admin/plugins/google-adsense', [], async (req, res) => {
 		let groupNames = await groups.getGroups('groups:createtime', 0, -1);
 		groupNames = groupNames.filter(groupName => groupName && !groups.isPrivilegeGroup(groupName))
 			.map(groupName => ({
@@ -41,16 +33,65 @@ Adsense.admin.onLoad = async function (params) {
 	});
 };
 
+
+Adsense.onConfigGet = async function (config) {
+	config.googleAdsense = await meta.settings.get('google-adsense');
+	return config;
+};
+
+
+Adsense.admin.menu = function (custom_header) {
+	custom_header.plugins.push({
+		route: '/plugins/google-adsense',
+		icon: 'fa-usd',
+		name: 'Google Adsense',
+	});
+	return custom_header;
+};
+
+/**
+ * Called on `action:plugin.activate`
+ */
 Adsense.admin.activate = async function (data) {
 	if (data.id === 'nodebb-plugin-google-adsense') {
-		const defaults = {
-			client_id: '',
-			header_id: '',
-			footer_id: '',
-			after_first_post_id: '',
-			first_post_position: 'bottom',
-			first_post_id: '',
-		};
+		const defaults = { client_id: '' };
 		await meta.settings.setOnEmpty('google-adsense', defaults);
 	}
+};
+
+/**
+ * Called on `filter:widgets.getWidgets`
+ */
+Adsense.widget.defineWidgets = async function (widgets) {
+	widgets.push({
+		widget: 'adsense-widget',
+		name: 'Google AdSense',
+		description: 'Easily place ads on your forum',
+		content: await app.renderAsync('admin/plugins/widgets/adsense-widget', {}),
+	});
+	return widgets;
+};
+
+/**
+ * Called on `filter:widget.render:adsense-widget`
+ */
+Adsense.widget.renderAdsense = async function (widget) {
+	try {
+		const settings = await meta.settings.get('google-adsense');
+
+		const adFreeGroups = JSON.parse(settings.adFreeGroups || '[]');
+		const isInAdFreeGroup = await groups.isMemberOfAny(widget.uid, adFreeGroups);
+		if (isInAdFreeGroup) {
+			return null;
+		}
+
+		widget.html = await app.renderAsync('widgets/adsense-widget', {
+			clientId: settings.client_id,
+			blockId: widget.templateData.template.blockId,
+		});
+	} catch (err) {
+		winston.error('[adsense] error', err);
+	}
+
+	return widget;
 };

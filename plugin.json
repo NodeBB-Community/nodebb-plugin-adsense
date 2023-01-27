@@ -5,10 +5,12 @@
 	"library": "./library.js",
 	"templates": "./templates",
 	"hooks": [
+		{ "hook": "static:app.load", "method": "onLoad" },
+		{ "hook": "filter:config.get", "method": "onConfigGet" },
 		{ "hook": "filter:admin.header.build", "method": "admin.menu"},
-		{ "hook": "static:app.load", "method": "admin.onLoad" },
+		{ "hook": "filter:widgets.getWidgets", "method": "widget.defineWidgets" },
 		{ "hook": "action:plugin.activate", "method": "admin.activate" },
-		{ "hook": "filter:config.get", "method": "onConfigGet" }
+		{ "hook": "filter:widget.render:adsense-widget", "method": "widget.renderAdsense" }
 	],
 	"scripts": [
 		"public/main.js"
