@@ -29,6 +29,7 @@ Adsense.onLoad = async function (params) {
 			}));
 		res.render('admin/plugins/google-adsense', {
 			groups: groupNames,
+			title: 'Google Adsense',
 		});
 	});
 };
