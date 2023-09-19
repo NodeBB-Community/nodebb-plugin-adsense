@@ -88,7 +88,7 @@ Adsense.widget.renderAdsense = async function (widget) {
 
 		widget.html = await app.renderAsync('widgets/adsense-widget', {
 			clientId: settings.client_id,
-			blockId: widget.templateData.template.blockId,
+			blockId: widget && widget.data && widget.data.blockId,
 		});
 	} catch (err) {
 		winston.error('[adsense] error', err);
