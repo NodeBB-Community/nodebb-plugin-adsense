@@ -20,6 +20,14 @@ Adsense.onLoad = async function (params) {
 
 	app = params.app;
 
+	helpers.setupPageRoute(params.router, '/ads.txt', async (req, res, next) => {
+		const { adstxt } = await meta.settings.get('google-adsense');
+		if (!adstxt) {
+			return next();
+		}
+		res.send(validator.escape(String(adstxt)));
+	});
+
 	helpers.setupAdminPageRoute(params.router, '/admin/plugins/google-adsense', [], async (req, res) => {
 		let groupNames = await groups.getGroups('groups:createtime', 0, -1);
 		groupNames = groupNames.filter(groupName => groupName && !groups.isPrivilegeGroup(groupName))
