@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/NodeBB-Community/nodebb-plugin-adsense"
   },
+  "scripts": {
+    "lint": "eslint ."
+  },
   "keywords": [
     "nodebb",
     "plugin",
@@ -25,12 +28,10 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "eslint": "8.10.0",
-    "eslint-config-nodebb": "0.1.1",
-    "eslint-plugin-import": "2.25.4"
+    "eslint": "9.37.0",
+    "eslint-config-nodebb": "^1.1.11"
   },
   "readmeFilename": "README.md",
   "gitHead": "29458fd32c922debda109277839d23ae5c9f7e4b",
-  "homepage": "https://github.com/NodeBB-Community/nodebb-plugin-adsense",
-  "scripts": {}
+  "homepage": "https://github.com/NodeBB-Community/nodebb-plugin-adsense"
 }

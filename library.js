@@ -93,13 +93,17 @@ Adsense.widget.renderAdsense = async function (widget) {
 		if (isInAdFreeGroup) {
 			return null;
 		}
-
+		const widgetData = widget.data || {};
+		const adFormat = widgetData.adFormat === null || widgetData.adFormat === undefined ? 'auto' : widgetData.adFormat;
 		widget.html = await app.renderAsync('widgets/adsense-widget', {
 			clientId: settings.client_id,
-			blockId: widget && widget.data && widget.data.blockId,
+			blockId: widgetData && widgetData.blockId,
+			adFormat,
+			style: widgetData.style || '',
 		});
 	} catch (err) {
 		winston.error('[adsense] error', err);
+		return null;
 	}
 
 	return widget;
