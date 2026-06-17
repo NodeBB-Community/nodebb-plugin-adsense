@@ -2,9 +2,9 @@
 
 const validator = require('validator');
 
-const winston = require.main.require('winston');
-const meta = require.main.require('./src/meta');
-const groups = require.main.require('./src/groups');
+const winston = nodebb.require('winston');
+const meta = nodebb.require('./src/meta');
+const groups = nodebb.require('./src/groups');
 
 const Adsense = module.exports;
 Adsense.widget = {};
@@ -16,7 +16,7 @@ let app;
  * Called on `static:app.load`
  */
 Adsense.onLoad = async function (params) {
-	const helpers = require.main.require('./src/routes/helpers');
+	const helpers = nodebb.require('./src/routes/helpers');
 
 	app = params.app;
 
@@ -32,8 +32,8 @@ Adsense.onLoad = async function (params) {
 		let groupNames = await groups.getGroups('groups:createtime', 0, -1);
 		groupNames = groupNames.filter(groupName => groupName && !groups.isPrivilegeGroup(groupName))
 			.map(groupName => ({
-				name: validator.escape(String(groupName)),
-				value: validator.escape(String(groupName)),
+				name: groupName,
+				value: groupName,
 			}));
 		res.render('admin/plugins/google-adsense', {
 			groups: groupNames,
